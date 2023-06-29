@@ -1,5 +1,5 @@
 Terminals integer '+' '-' '*' '/'.
-Nonterminals expr arith.
+Nonterminals expr unary arith.
 Rootsymbol expr.
 
 %% -------------------------------------
@@ -10,6 +10,7 @@ Left 300 '+'.
 Left 300 '-'.
 Left 400 '*'.
 Left 400 '/'.
+Unary 500 unary.
 
 %% -------------------------------------
 %% Rules
@@ -17,6 +18,10 @@ Left 400 '/'.
 
 expr -> integer : '$1'.
 expr -> arith : '$1'.
+expr -> unary : '$1'.
+
+unary -> '-' expr : {symbol('$1'), position('$1'), ['$2']}.
+unary -> '+' expr : {symbol('$1'), position('$1'), ['$2']}.
 
 arith -> expr '+' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.
 arith -> expr '-' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.

@@ -36,6 +36,27 @@ defmodule DemoParser.BaseParserTest do
            } = parse(~c"0 - 1 * 2 + 3 / 4")
   end
 
+  test "unary expression" do
+    assert {:ok, {:+, _, [{:integer, _, 1}]}} = parse(~c"+1")
+    assert {:ok, {:-, _, [{:integer, _, 1}]}} = parse(~c"-1")
+
+    assert {:ok,
+            {:-, _,
+             [
+               {:+, _,
+                [
+                  {:-, _, [{:integer, _, 1}]}
+                ]}
+             ]}} = parse(~c"-+-1")
+
+    assert {:ok,
+            {:+, _,
+             [
+               {:-, _, [{:integer, _, 1}]},
+               {:+, _, [{:integer, _, 2}]}
+             ]}} = parse(~c"-1 + +2")
+  end
+
   defp parse(str) do
     {:ok, tokens, _} = BaseLexer.string(str)
     BaseParser.parse(tokens)
