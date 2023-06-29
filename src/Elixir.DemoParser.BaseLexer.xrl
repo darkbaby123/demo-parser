@@ -10,6 +10,8 @@ Rules.
 \-            : {token, {'-', TokenLoc}}.
 \*            : {token, {'*', TokenLoc}}.
 \/            : {token, {'/', TokenLoc}}.
+\(            : {token, {'(', TokenLoc}}.
+\)            : {token, {')', TokenLoc}}.
 {WHITESPACE}+ : skip_token.
 
 Erlang code.

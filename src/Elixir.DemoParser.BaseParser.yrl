@@ -1,5 +1,5 @@
-Terminals integer '+' '-' '*' '/'.
-Nonterminals expr unary arith.
+Terminals integer '+' '-' '*' '/' '(' ')'.
+Nonterminals expr unary arith bracket_expr.
 Rootsymbol expr.
 
 %% -------------------------------------
@@ -19,6 +19,7 @@ Unary 500 unary.
 expr -> integer : '$1'.
 expr -> arith : '$1'.
 expr -> unary : '$1'.
+expr -> bracket_expr : '$1'.
 
 unary -> '-' expr : {symbol('$1'), position('$1'), ['$2']}.
 unary -> '+' expr : {symbol('$1'), position('$1'), ['$2']}.
@@ -27,6 +28,8 @@ arith -> expr '+' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.
 arith -> expr '-' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.
 arith -> expr '*' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.
 arith -> expr '/' expr : {symbol('$2'), position('$2'), ['$1', '$3']}.
+
+bracket_expr -> '(' expr ')' : '$2'.
 
 Erlang code.
 

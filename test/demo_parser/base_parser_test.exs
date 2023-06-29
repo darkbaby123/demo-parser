@@ -57,6 +57,33 @@ defmodule DemoParser.BaseParserTest do
              ]}} = parse(~c"-1 + +2")
   end
 
+  test "bracket expression" do
+    assert {:ok, {:integer, _, 1}} = parse(~c"(1)")
+    assert {:ok, {:integer, _, 1}} = parse(~c"((1))")
+
+    assert {:ok,
+            {:*, _,
+             [
+               {:+, _,
+                [
+                  {:integer, _, 1},
+                  {:integer, _, 2}
+                ]},
+               {:integer, _, 3}
+             ]}} = parse(~c"(1 + 2) * 3")
+
+    assert {:ok,
+            {:*, _,
+             [
+               {:integer, _, 1},
+               {:+, _,
+                [
+                  {:integer, _, 2},
+                  {:integer, _, 3}
+                ]}
+             ]}} = parse(~c"1 * (2 + 3)")
+  end
+
   defp parse(str) do
     {:ok, tokens, _} = BaseLexer.string(str)
     BaseParser.parse(tokens)

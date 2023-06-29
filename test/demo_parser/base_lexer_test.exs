@@ -24,4 +24,24 @@ defmodule DemoParser.BaseLexerTest do
     assert {:ok, [{:*, {1, 1}}], _} = BaseLexer.string(~c"*")
     assert {:ok, [{:/, {1, 1}}], _} = BaseLexer.string(~c"/")
   end
+
+  test "brackets" do
+    assert {:ok,
+            [
+              {:"(", {1, 1}},
+              {:integer, {1, 2}, 1},
+              {:")", {1, 3}}
+            ], _} = BaseLexer.string(~c"(1)")
+
+    assert {:ok,
+            [
+              {:integer, {1, 1}, 1},
+              {:*, {1, 3}},
+              {:"(", {1, 5}},
+              {:integer, {1, 6}, 2},
+              {:+, {1, 8}},
+              {:integer, {1, 10}, 3},
+              {:")", {1, 11}}
+            ], _} = BaseLexer.string(~c"1 * (2 + 3)")
+  end
 end
